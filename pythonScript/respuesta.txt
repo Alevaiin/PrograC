@@ -1,0 +1,4 @@
+El script simula lanzamientos de dados de cada jugador, imprimiendo el resultado de cada lanzamiento y el total acumulado.
+Los lanzamientos se hacen de manera concurrente ya que se crea un proceso nuevo por cada jugador.
+
+(Como si cada jugador tuviera un dado y estos los lanzan a la vez, anotando sus resultados)
