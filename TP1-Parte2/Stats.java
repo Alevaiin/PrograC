@@ -1,6 +1,5 @@
-import java.util.Comparator;
-
-public class Stats implements Comparable<Stats>{
+public class Stats implements Comparable<Stats>
+{
 
     int points = 0;
     int played = 0;
@@ -11,8 +10,9 @@ public class Stats implements Comparable<Stats>{
     int goalsAgainst = 0;
     int goalsDiff = 0;
 
-    public void addVictory(MatchResult result){
-        this.played ++;
+    public void addVictory(MatchResult result)
+    {
+        this.played++;
         this.won++;
         this.points += 3;
         this.goalsInFavor += Math.max(result.getGoalsAway(), result.getGoalsHome());
@@ -20,7 +20,8 @@ public class Stats implements Comparable<Stats>{
         this.goalsDiff += Math.abs(result.getGoalsAway() - result.getGoalsHome());
     }
 
-    public void addLost(MatchResult result){
+    public void addLost(MatchResult result)
+    {
         this.played++;
         this.lost++;
         this.goalsInFavor += Math.min(result.getGoalsAway(), result.getGoalsHome());
@@ -28,7 +29,8 @@ public class Stats implements Comparable<Stats>{
         this.goalsDiff -= Math.abs(result.getGoalsAway() - result.getGoalsHome());
     }
 
-    public void addTie(MatchResult result){
+    public void addTie(MatchResult result)
+    {
         this.played++;
         this.tied++;
         this.points += 1;
@@ -37,49 +39,60 @@ public class Stats implements Comparable<Stats>{
     }
 
     @Override
-    public int compareTo(Stats otherStats) {
+    public int compareTo(Stats otherStats)
+    {
         int result = Integer.compare(this.points, otherStats.points);
-        if (result != 0) {
+        if (result != 0)
+        {
             return result;
         }
 
         result = Integer.compare(this.goalsDiff, otherStats.goalsDiff);
-        if (result != 0) {
+        if (result != 0)
+        {
             return result;
         }
 
         return Integer.compare(this.goalsInFavor, otherStats.goalsInFavor);
     }
 
-    public int getPoints(){
+    public int getPoints()
+    {
         return points;
     }
 
-    public int getGoalsDiff() {
+    public int getGoalsDiff()
+    {
         return goalsDiff;
     }
 
-    public int getGoalsAgainst() {
+    public int getGoalsAgainst()
+    {
         return goalsAgainst;
     }
 
-    public int getGoalsInFavor() {
+    public int getGoalsInFavor()
+    {
         return goalsInFavor;
     }
 
-    public int getLost() {
+    public int getLost()
+    {
         return lost;
     }
 
-    public int getTied() {
+    public int getTied()
+    {
         return tied;
     }
 
-    public int getWon() {
+    public int getWon()
+    {
         return won;
     }
 
-    public int getPlayed() {
+    public int getPlayed()
+    {
         return played;
     }
 }

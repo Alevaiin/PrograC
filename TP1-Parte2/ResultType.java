@@ -1,5 +1,5 @@
-public enum ResultType {
-
+public enum ResultType
+{
     TIE,
     HOME_WON,
     AWAY_WON;

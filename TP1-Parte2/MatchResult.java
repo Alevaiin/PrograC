@@ -1,36 +1,39 @@
-public class MatchResult {
+public class MatchResult
+{
 
 
     int goalsHome;
     int goalsAway;
 
-    public MatchResult(int goalsHome, int goalsAway){
+    public MatchResult(int goalsHome, int goalsAway)
+    {
         this.goalsHome = goalsHome;
         this.goalsAway = goalsAway;
     }
 
 
-    public int getGoalsAway() {
+    public int getGoalsAway()
+    {
         return goalsAway;
     }
 
-    public int getGoalsHome() {
+    public int getGoalsHome()
+    {
         return goalsHome;
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return goalsHome + " - " + goalsAway;
     }
 
-    public ResultType getResult(){
-        if( goalsHome > goalsAway)
+    public ResultType getResult()
+    {
+        if (goalsHome > goalsAway)
             return ResultType.HOME_WON;
-        if(goalsAway > goalsHome)
+        if (goalsAway > goalsHome)
             return ResultType.AWAY_WON;
         return ResultType.TIE;
     }
-
-
-
 }

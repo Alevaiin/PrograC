@@ -2,17 +2,20 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Fixture {
+public class Fixture
+{
 
     private final List<Team> teams;
     private List<GameWeek> weeks;
 
-    public Fixture(List<Team> teams){
+    public Fixture(List<Team> teams)
+    {
         this.teams = teams;
         generateMatches();
     }
 
-    private void generateMatches() {
+    private void generateMatches()
+    {
         List<Team> teamsAux = new ArrayList<>(teams);
         Collections.shuffle(teamsAux);
         int teamsSize = teamsAux.size();
@@ -21,45 +24,50 @@ public class Fixture {
 
         this.weeks = new ArrayList<>();
 
-        for (int round = 0; round < numRounds; round++) {
+        for (int round = 0; round < numRounds; round++)
+        {
             List<Match> weekMatches = new ArrayList<>();
-            for (int i = 0; i < teamsSizeHalf; i++) {
+            for (int i = 0; i < teamsSizeHalf; i++)
+            {
                 Team home = teamsAux.get(i);
                 Team away = teamsAux.get(teamsSize - 1 - i);
 
-                // Alternamos localia para evitar que un equipo juegue siempre de local o visitante
-                if (round % 2 == 0) {
+                if (round % 2 == 0)
+                {
                     weekMatches.add(new Match(home, away));
-                } else {
+                } else
+                {
                     weekMatches.add(new Match(away, home));
                 }
             }
 
-            weeks.add(new GameWeek( Integer.toString(round + 1), weekMatches));
+            weeks.add(new GameWeek(Integer.toString(round + 1), weekMatches));
 
-            // Rotación de equipos (excepto el primero)
             Team fixed = teamsAux.get(0);
             teamsAux.remove(0);
-            teamsAux.add(1, fixed); // reposicionar el equipo fijo
-            Collections.rotate(teamsAux.subList(1, teamsSize), 1); // rotar los demás
+            teamsAux.add(1, fixed);
+            Collections.rotate(teamsAux.subList(1, teamsSize), 1);
         }
     }
 
-
     @Override
-    public String toString() {
+    public String toString()
+    {
         String text = "--\n";
-        for (GameWeek week : weeks){
+        for (GameWeek week : weeks)
+        {
             text = text.concat(week.toString()).concat("--\n");
         }
         return text;
     }
 
-    public List<Team> getTeams() {
+    public List<Team> getTeams()
+    {
         return teams;
     }
 
-    public List<GameWeek> getWeeks() {
+    public List<GameWeek> getWeeks()
+    {
         return weeks;
     }
 }

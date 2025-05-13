@@ -1,11 +1,13 @@
-public class Constants {
+public class Constants
+{
 
-    private Constants(){
+    private Constants()
+    {
 
     }
 
-    public static final int MIN_MATCH_DURATION = 100; //Duracion minima de un partido en ms
-    public static final int MAX_MATCH_DURATION = 500; //Duracion maxima de un partido en ms
+    public static final int MIN_MATCH_DURATION = 100;
+    public static final int MAX_MATCH_DURATION = 500;
 
     public static final int MS_BETWEEN_MATCH_TICKS = 5;
 

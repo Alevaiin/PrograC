@@ -1,41 +1,49 @@
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
-public class GameWeek {
+public class GameWeek
+{
 
     private String gameWeekNumber;
     private List<Match> matches;
 
-    public GameWeek(String gameWeekNumber, List<Match> matches){
+    public GameWeek(String gameWeekNumber, List<Match> matches)
+    {
         this.gameWeekNumber = gameWeekNumber;
         this.matches = matches;
     }
 
-    public List<Match> playConcurrent(ExecutorService executor, int poolSize){
-        System.out.println("Jugando fecha "+this.gameWeekNumber);
+    public List<Match> playConcurrent(ExecutorService executor, int poolSize)
+    {
+        System.out.println("Jugando fecha " + this.gameWeekNumber);
         CountDownLatch latch = new CountDownLatch(poolSize);
 
-        for (Match match : matches){
-            executor.submit(() -> {
+        for (Match match : matches)
+        {
+            executor.submit(() ->
+            {
                 match.run();
                 latch.countDown();
             });
         }
 
-        try {
+        try
+        {
             latch.await();
-        } catch (InterruptedException e) {
+        } catch (InterruptedException e)
+        {
             throw new RuntimeException(e);
         }
 
         return matches;
     }
 
-    public List<Match> playSecuential(){
-        System.out.println("Jugando fecha "+this.gameWeekNumber);
-        for (Match match : matches){
+    public List<Match> playSecuential()
+    {
+        System.out.println("Jugando fecha " + this.gameWeekNumber);
+        for (Match match : matches)
+        {
             match.play();
         }
 
@@ -43,25 +51,31 @@ public class GameWeek {
     }
 
     @Override
-    public String toString() {
-        String text = "Fecha "+gameWeekNumber +":\n";
-        for (Match match : matches){
-            text = text.concat(match.toString()+"\n");
+    public String toString()
+    {
+        String text = "Fecha " + gameWeekNumber + ":\n";
+        for (Match match : matches)
+        {
+            text = text.concat(match.toString() + "\n");
         }
         return text;
     }
 
-    public List<Match> getMatches() {
+    public List<Match> getMatches()
+    {
         return matches;
     }
 
-    public String getGameWeekNumber() {
+    public String getGameWeekNumber()
+    {
         return gameWeekNumber;
     }
 
-    public boolean isFinished(){
+    public boolean isFinished()
+    {
         boolean isFinished = true;
-        for ( Match match : this.matches){
+        for (Match match : this.matches)
+        {
             isFinished = isFinished && match.isFinished();
         }
         return isFinished;

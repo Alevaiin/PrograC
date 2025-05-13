@@ -1,19 +1,20 @@
 import java.util.*;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class Tournament {
+public class Tournament
+{
     private Fixture fixture;
-    private Map<Team,Stats> teamsStats;
-    private int currentWeek;
+    private Map<Team, Stats> teamsStats;
 
-    public Tournament(String name, Fixture fixture){
+    public Tournament(String name, Fixture fixture)
+    {
         this.fixture = fixture;
         this.teamsStats = generatePositionTable();
     }
 
-    public void showResults(){
+    public void showResults()
+    {
         String leftAlignFormat = "| %-2d | %-16s | %-3d | %-2d | %-2d | %-2d | %-2d | %-2d | %-2d | %-3d |%n";
 
         System.out.format("+---+-------------------+-----+----+----+----+----+----+----+-----+%n");
@@ -21,80 +22,88 @@ public class Tournament {
         System.out.format("+---+-------------------+-----+----+----+----+----+----+----+-----+%n");
         List<Team> teamsInOrder = this.teamsStats.keySet().stream().sorted((o1, o2) -> this.teamsStats.get(o2).compareTo(this.teamsStats.get(o1))).toList();
 
-        for (int i = 0; i < teamsInOrder.size(); i++) {
+        for (int i = 0; i < teamsInOrder.size(); i++)
+        {
             Team team = teamsInOrder.get(i);
             Stats stats = this.teamsStats.get(team);
-            System.out.format(leftAlignFormat, i+1, team.getName(), stats.getPoints(), stats.getPlayed(), stats.getWon(), stats.getTied(), stats.getLost(), stats.getGoalsInFavor(), stats.getGoalsAgainst(), stats.getGoalsDiff());
+            System.out.format(leftAlignFormat, i + 1, team.getName(), stats.getPoints(), stats.getPlayed(), stats.getWon(), stats.getTied(), stats.getLost(), stats.getGoalsInFavor(), stats.getGoalsAgainst(), stats.getGoalsDiff());
         }
         System.out.format("+---+-------------------+-----+----+----+----+----+----+----+-----+%n");
     }
 
-    public void startConcurrent(){
+    public void startConcurrent()
+    {
         List<GameWeek> weeks = this.fixture.getWeeks();
-        this.currentWeek = 0;
 
         int poolSize = weeks.get(0).getMatches().size();
-        ExecutorService executor= Executors.newFixedThreadPool(poolSize);
+        ExecutorService executor = Executors.newFixedThreadPool(poolSize);
 
-        for (GameWeek week : weeks){
+        for (GameWeek week : weeks)
+        {
             List<Match> weekMatches = week.playConcurrent(executor, poolSize);
-            currentWeek++;
             processWeekResults(weekMatches);
         }
         executor.shutdown();
     }
 
-    public void startSecuential(){
+    public void startSecuential()
+    {
         List<GameWeek> weeks = this.fixture.getWeeks();
-        this.currentWeek = 0;
 
-        for (GameWeek week : weeks){
+        for (GameWeek week : weeks)
+        {
             List<Match> weekMatches = week.playSecuential();
-            currentWeek++;
             processWeekResults(weekMatches);
         }
     }
 
-    public void reset(){
+    public void reset()
+    {
         this.teamsStats = generatePositionTable();
     }
 
-    private Map<Team,Stats> generatePositionTable(){
-        Map<Team,Stats> teamStatsMap = new HashMap<>();
-        for (Team team : fixture.getTeams()){
+    private Map<Team, Stats> generatePositionTable()
+    {
+        Map<Team, Stats> teamStatsMap = new HashMap<>();
+        for (Team team : fixture.getTeams())
+        {
             teamStatsMap.put(team, new Stats());
         }
         return teamStatsMap;
     }
 
-    private void processWeekResults(List<Match> matches){
-        for (Match match : matches){
+    private void processWeekResults(List<Match> matches)
+    {
+        for (Match match : matches)
+        {
             processSingleResult(match);
         }
     }
 
-    private void processSingleResult(Match match){
+    private void processSingleResult(Match match)
+    {
         MatchResult matchResult = match.getResult();
         ResultType resultType = matchResult.getResult();
 
         Stats homeStats = this.teamsStats.get(match.getHome());
         Stats awayStats = this.teamsStats.get(match.getAway());
 
-        if(resultType.equals(ResultType.HOME_WON)){
+        if (resultType.equals(ResultType.HOME_WON))
+        {
             homeStats.addVictory(matchResult);
             awayStats.addLost(matchResult);
         }
 
-        if(resultType.equals(ResultType.AWAY_WON)){
+        if (resultType.equals(ResultType.AWAY_WON))
+        {
             awayStats.addVictory(matchResult);
             homeStats.addLost(matchResult);
         }
 
-        if(resultType.equals(ResultType.TIE)){
+        if (resultType.equals(ResultType.TIE))
+        {
             awayStats.addTie(matchResult);
             homeStats.addTie(matchResult);
         }
     }
-
-
 }
