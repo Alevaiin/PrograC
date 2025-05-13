@@ -37,7 +37,7 @@ public class Match implements Runnable {
         long maxTime = now + MAX_MATCH_DURATION;
 
 
-        while(now  < maxTime){
+        while(now < maxTime){
             pointsHome = (int) Math.round(rand.nextGaussian() * powerHome);
             pointsAway = (int) Math.round(rand.nextGaussian() * powerAway);
 

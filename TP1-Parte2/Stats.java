@@ -1,4 +1,6 @@
-public class Stats {
+import java.util.Comparator;
+
+public class Stats implements Comparable<Stats>{
 
     int points = 0;
     int played = 0;
@@ -34,7 +36,50 @@ public class Stats {
         this.goalsAgainst += result.getGoalsAway();
     }
 
+    @Override
+    public int compareTo(Stats otherStats) {
+        int result = Integer.compare(this.points, otherStats.points);
+        if (result != 0) {
+            return result;
+        }
 
+        result = Integer.compare(this.goalsDiff, otherStats.goalsDiff);
+        if (result != 0) {
+            return result;
+        }
 
+        return Integer.compare(this.goalsInFavor, otherStats.goalsInFavor);
+    }
 
+    public int getPoints(){
+        return points;
+    }
+
+    public int getGoalsDiff() {
+        return goalsDiff;
+    }
+
+    public int getGoalsAgainst() {
+        return goalsAgainst;
+    }
+
+    public int getGoalsInFavor() {
+        return goalsInFavor;
+    }
+
+    public int getLost() {
+        return lost;
+    }
+
+    public int getTied() {
+        return tied;
+    }
+
+    public int getWon() {
+        return won;
+    }
+
+    public int getPlayed() {
+        return played;
+    }
 }

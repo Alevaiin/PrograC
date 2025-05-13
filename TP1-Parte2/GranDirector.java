@@ -14,6 +14,8 @@ public class GranDirector {
         Tournament apertura98 = new Tournament("Apertura 92", fixture);
         apertura98.start();
 
+        apertura98.showResults();
+
     }
 
     private static List<Team> readTeamsFile(String fileName){

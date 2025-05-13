@@ -1,6 +1,4 @@
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Tournament {
     private Fixture fixture;
@@ -13,6 +11,22 @@ public class Tournament {
         for (Team team : fixture.getTeams()){
             this.teamsStats.put(team, new Stats());
         }
+    }
+
+    public void showResults(){
+        String leftAlignFormat = "| %-2d | %-16s | %-3d | %-2d | %-2d | %-2d | %-2d | %-2d | %-2d | %-3d |%n";
+
+        System.out.format("+---+-------------------+-----+----+----+----+----+----+----+-----+%n");
+        System.out.format("| # | Equipo            | Pts | PJ | PG | PE | PP | GF | GC | DIF |%n");
+        System.out.format("+---+-------------------+-----+----+----+----+----+----+----+-----+%n");
+        List<Team> teamsInOrder = this.teamsStats.keySet().stream().sorted((o1, o2) -> this.teamsStats.get(o2).compareTo(this.teamsStats.get(o1))).toList();
+
+        for (int i = 0; i < teamsInOrder.size(); i++) {
+            Team team = teamsInOrder.get(i);
+            Stats stats = this.teamsStats.get(team);
+            System.out.format(leftAlignFormat, i+1, team.getName(), stats.getPoints(), stats.getPlayed(), stats.getWon(), stats.getTied(), stats.getLost(), stats.getGoalsInFavor(), stats.getGoalsAgainst(), stats.getGoalsDiff());
+        }
+        System.out.format("+---+-------------------+-----+----+----+----+----+----+----+-----+%n");
     }
 
     public void start(){
