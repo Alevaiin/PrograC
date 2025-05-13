@@ -8,8 +8,8 @@ public class Match implements Runnable {
     private final int MIN_MATCH_DURATION = 100; //Duracion minima de un partido en ms
     private final int MAX_MATCH_DURATION = 500; //Duracion maxima de un partido en ms
 
-    private final int MIN_TICK_WEIGHT = 1;
-    private final int MAX_TICK_WEIGHT = 5;
+    private final int MIN_TICK_WAIT = 5;
+    private final int MAX_TICK_WAIT = 15;
 
     private final double PERCENTAGE_DIFFERENCE_TO_GOAL = 0.2;
 
@@ -23,7 +23,7 @@ public class Match implements Runnable {
         return home.getName() + " vs "+away.getName();
     }
 
-    public MatchResult play(){
+    public MatchResult play() throws InterruptedException {
         Integer powerHome = home.getPower();
         Integer powerAway = away.getPower();
         int pointsHome;
@@ -33,11 +33,11 @@ public class Match implements Runnable {
         int goalsAway = 0;
 
         Random rand = new Random();
-        long now = System.nanoTime();
-        long maxTime = now + MAX_MATCH_DURATION;
-
-
-        while(now < maxTime){
+        long startTime = System.currentTimeMillis();
+        long maxTime = startTime + MAX_MATCH_DURATION;
+        long totalWaitedTime = 0;
+        long thickWait;
+        while(startTime + totalWaitedTime< maxTime){ //Tick
             pointsHome = (int) Math.round(rand.nextGaussian() * powerHome);
             pointsAway = (int) Math.round(rand.nextGaussian() * powerAway);
 
@@ -46,8 +46,9 @@ public class Match implements Runnable {
                     goalsAway++;
                 else
                     goalsHome++;
-
-            now = System.nanoTime();
+            thickWait = rand.nextInt(MAX_TICK_WAIT-MIN_TICK_WAIT) + MIN_TICK_WAIT;
+            totalWaitedTime+=thickWait;
+            Thread.sleep(thickWait);
         }
         this.matchResult = new MatchResult(goalsHome, goalsAway);
         return this.matchResult;
@@ -57,7 +58,11 @@ public class Match implements Runnable {
     @Override
     public void run() {
         System.out.println("Iniciando "+this.toString());
-        play();
+        try {
+            play();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
 
         System.out.println("Resultado "+this.toString()+": "+ this.matchResult);
     }
