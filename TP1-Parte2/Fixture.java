@@ -54,4 +54,12 @@ public class Fixture {
         }
         return text;
     }
+
+    public List<Team> getTeams() {
+        return teams;
+    }
+
+    public List<GameWeek> getWeeks() {
+        return weeks;
+    }
 }

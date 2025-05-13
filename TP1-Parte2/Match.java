@@ -1,6 +1,6 @@
 import java.util.Random;
 
-public class Match {
+public class Match implements Runnable {
     private final Team home;
     private final Team away;
     private MatchResult matchResult;
@@ -8,8 +8,10 @@ public class Match {
     private final int MIN_MATCH_DURATION = 100; //Duracion minima de un partido en ms
     private final int MAX_MATCH_DURATION = 500; //Duracion maxima de un partido en ms
 
-    private final int MIN_SLEEP_TIME = 50;
-    private final int MAX_SLEEP_TIME = 100;
+    private final int MIN_TICK_WEIGHT = 1;
+    private final int MAX_TICK_WEIGHT = 5;
+
+    private final double PERCENTAGE_DIFFERENCE_TO_GOAL = 0.2;
 
     public Match(Team home, Team away){
         this.home = home;
@@ -24,26 +26,55 @@ public class Match {
     public MatchResult play(){
         Integer powerHome = home.getPower();
         Integer powerAway = away.getPower();
+        int pointsHome;
+        int pointsAway;
+
+        int goalsHome = 0;
+        int goalsAway = 0;
 
         Random rand = new Random();
-        long maxTime = System.nanoTime() + MAX_MATCH_DURATION;
+        long now = System.nanoTime();
+        long maxTime = now + MAX_MATCH_DURATION;
 
-        int sleepTime = rand.nextInt(MAX_SLEEP_TIME-MIN_SLEEP_TIME) + MIN_SLEEP_TIME;
-        int pointsHome = 0;
-        int pointsAway = 0;
 
-        while(System.nanoTime() < maxTime){
+        while(now  < maxTime){
+            pointsHome = (int) Math.round(rand.nextGaussian() * powerHome);
+            pointsAway = (int) Math.round(rand.nextGaussian() * powerAway);
 
-            pointsHome += (int) Math.round(rand.nextGaussian() * powerHome + (powerHome / 25.0));
-            pointsAway += (int) Math.round(rand.nextGaussian() * powerAway + (powerAway / 25.0));
+            if(pointsAway * PERCENTAGE_DIFFERENCE_TO_GOAL > Math.abs(pointsHome - pointsAway) )
+                if(pointsAway > pointsHome)
+                    goalsAway++;
+                else
+                    goalsHome++;
 
+            now = System.nanoTime();
         }
-
-        return new MatchResult();
+        this.matchResult = new MatchResult(goalsHome, goalsAway);
+        return this.matchResult;
 
     }
 
-    private void matchTick(){
+    @Override
+    public void run() {
+        System.out.println("Iniciando "+this.toString());
+        play();
 
+        System.out.println("Resultado "+this.toString()+": "+ this.matchResult);
+    }
+
+    public boolean isFinished(){
+        return matchResult != null;
+    }
+
+    public MatchResult getResult() {
+        return this.matchResult;
+    }
+
+    public Team getHome() {
+        return home;
+    }
+
+    public Team getAway() {
+        return away;
     }
 }

@@ -10,6 +10,10 @@ public class GranDirector {
 
         Fixture fixture = new Fixture(teams);
         System.out.println(fixture);
+
+        Tournament apertura98 = new Tournament("Apertura 92", fixture);
+        apertura98.start();
+
     }
 
     private static List<Team> readTeamsFile(String fileName){
