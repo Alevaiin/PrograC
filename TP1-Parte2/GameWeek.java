@@ -5,8 +5,8 @@ import java.util.concurrent.ExecutorService;
 public class GameWeek
 {
 
-    private String gameWeekNumber;
-    private List<Match> matches;
+    private final String gameWeekNumber;
+    private final List<Match> matches;
 
     public GameWeek(String gameWeekNumber, List<Match> matches)
     {
@@ -64,20 +64,5 @@ public class GameWeek
     public List<Match> getMatches()
     {
         return matches;
-    }
-
-    public String getGameWeekNumber()
-    {
-        return gameWeekNumber;
-    }
-
-    public boolean isFinished()
-    {
-        boolean isFinished = true;
-        for (Match match : this.matches)
-        {
-            isFinished = isFinished && match.isFinished();
-        }
-        return isFinished;
     }
 }

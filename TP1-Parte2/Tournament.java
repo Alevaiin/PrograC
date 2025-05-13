@@ -4,7 +4,7 @@ import java.util.concurrent.Executors;
 
 public class Tournament
 {
-    private Fixture fixture;
+    private final Fixture fixture;
     private Map<Team, Stats> teamsStats;
 
     public Tournament(String name, Fixture fixture)

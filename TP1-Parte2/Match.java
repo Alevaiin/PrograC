@@ -62,11 +62,6 @@ public class Match implements Runnable
         play();
     }
 
-    public boolean isFinished()
-    {
-        return matchResult != null;
-    }
-
     public MatchResult getResult()
     {
         return this.matchResult;

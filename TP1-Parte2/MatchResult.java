@@ -1,7 +1,5 @@
 public class MatchResult
 {
-
-
     int goalsHome;
     int goalsAway;
 

@@ -1,7 +1,7 @@
 public class Team
 {
-    private String name;
-    private Integer power;
+    private final String name;
+    private final Integer power;
 
     public Team(String name, Integer power)
     {

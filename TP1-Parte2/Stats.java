@@ -1,6 +1,5 @@
 public class Stats implements Comparable<Stats>
 {
-
     int points = 0;
     int played = 0;
     int won = 0;
