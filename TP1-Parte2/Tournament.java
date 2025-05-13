@@ -1,4 +1,7 @@
 import java.util.*;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Tournament {
     private Fixture fixture;
@@ -7,10 +10,7 @@ public class Tournament {
 
     public Tournament(String name, Fixture fixture){
         this.fixture = fixture;
-        this.teamsStats = new HashMap<>();
-        for (Team team : fixture.getTeams()){
-            this.teamsStats.put(team, new Stats());
-        }
+        this.teamsStats = generatePositionTable();
     }
 
     public void showResults(){
@@ -29,15 +29,42 @@ public class Tournament {
         System.out.format("+---+-------------------+-----+----+----+----+----+----+----+-----+%n");
     }
 
-    public void start(){
-         List<GameWeek> weeks = this.fixture.getWeeks();
-         this.currentWeek = 0;
+    public void startConcurrent(){
+        List<GameWeek> weeks = this.fixture.getWeeks();
+        this.currentWeek = 0;
 
-         for (GameWeek week : weeks){
-             List<Match> weekMatches = week.play();
-             currentWeek++;
-             processWeekResults(weekMatches);
-         }
+        int poolSize = weeks.get(0).getMatches().size();
+        ExecutorService executor= Executors.newFixedThreadPool(poolSize);
+
+        for (GameWeek week : weeks){
+            List<Match> weekMatches = week.playConcurrent(executor, poolSize);
+            currentWeek++;
+            processWeekResults(weekMatches);
+        }
+        executor.shutdown();
+    }
+
+    public void startSecuential(){
+        List<GameWeek> weeks = this.fixture.getWeeks();
+        this.currentWeek = 0;
+
+        for (GameWeek week : weeks){
+            List<Match> weekMatches = week.playSecuential();
+            currentWeek++;
+            processWeekResults(weekMatches);
+        }
+    }
+
+    public void reset(){
+        this.teamsStats = generatePositionTable();
+    }
+
+    private Map<Team,Stats> generatePositionTable(){
+        Map<Team,Stats> teamStatsMap = new HashMap<>();
+        for (Team team : fixture.getTeams()){
+            teamStatsMap.put(team, new Stats());
+        }
+        return teamStatsMap;
     }
 
     private void processWeekResults(List<Match> matches){

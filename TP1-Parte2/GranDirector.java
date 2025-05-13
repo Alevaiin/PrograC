@@ -12,9 +12,18 @@ public class GranDirector {
         System.out.println(fixture);
 
         Tournament apertura98 = new Tournament("Apertura 92", fixture);
-        apertura98.start();
 
+        long startTime = System.currentTimeMillis();
+        apertura98.startConcurrent();
         apertura98.showResults();
+
+        System.out.println("Tiempo total: "+ (System.currentTimeMillis() - startTime)/1000.0 + " segundos");
+
+        apertura98.reset();
+        startTime = System.currentTimeMillis();
+        apertura98.startSecuential();
+        apertura98.showResults();
+        System.out.format("Tiempo total: %.2f segundos", (System.currentTimeMillis() - startTime)/1000.0);
 
     }
 

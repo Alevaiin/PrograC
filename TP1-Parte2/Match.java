@@ -8,8 +8,7 @@ public class Match implements Runnable {
     private final int MIN_MATCH_DURATION = 100; //Duracion minima de un partido en ms
     private final int MAX_MATCH_DURATION = 500; //Duracion maxima de un partido en ms
 
-    private final int MIN_TICK_WAIT = 5;
-    private final int MAX_TICK_WAIT = 15;
+    private final int MS_BETWEEN_TICKS = 5;
 
     private final double PERCENTAGE_DIFFERENCE_TO_GOAL = 0.2;
 
@@ -23,7 +22,8 @@ public class Match implements Runnable {
         return home.getName() + " vs "+away.getName();
     }
 
-    public MatchResult play() throws InterruptedException {
+    public MatchResult play() {
+        System.out.println("Iniciando "+this.toString());
         Integer powerHome = home.getPower();
         Integer powerAway = away.getPower();
         int pointsHome;
@@ -34,10 +34,9 @@ public class Match implements Runnable {
 
         Random rand = new Random();
         long startTime = System.currentTimeMillis();
-        long maxTime = startTime + MAX_MATCH_DURATION;
-        long totalWaitedTime = 0;
-        long thickWait;
-        while(startTime + totalWaitedTime< maxTime){ //Tick
+        long duration = rand.nextInt(MAX_MATCH_DURATION-MIN_MATCH_DURATION) + MIN_MATCH_DURATION;
+
+        while(System.currentTimeMillis() < (startTime +duration)){ //Tick
             pointsHome = (int) Math.round(rand.nextGaussian() * powerHome);
             pointsAway = (int) Math.round(rand.nextGaussian() * powerAway);
 
@@ -46,25 +45,20 @@ public class Match implements Runnable {
                     goalsAway++;
                 else
                     goalsHome++;
-            thickWait = rand.nextInt(MAX_TICK_WAIT-MIN_TICK_WAIT) + MIN_TICK_WAIT;
-            totalWaitedTime+=thickWait;
-            Thread.sleep(thickWait);
+            try{
+                Thread.sleep(MS_BETWEEN_TICKS);
+            }catch (InterruptedException e){
+                System.out.println("Error en partido");
+            }
         }
         this.matchResult = new MatchResult(goalsHome, goalsAway);
+        System.out.println("Resultado "+this.toString()+": "+ this.matchResult + " Duracion: "+(System.currentTimeMillis() - startTime ) + "ms");
         return this.matchResult;
-
     }
 
     @Override
     public void run() {
-        System.out.println("Iniciando "+this.toString());
-        try {
-            play();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-
-        System.out.println("Resultado "+this.toString()+": "+ this.matchResult);
+        play();
     }
 
     public boolean isFinished(){

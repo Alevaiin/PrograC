@@ -13,11 +13,10 @@ public class GameWeek {
         this.matches = matches;
     }
 
-    public List<Match> play(){
+    public List<Match> playConcurrent(ExecutorService executor, int poolSize){
         System.out.println("Jugando fecha "+this.gameWeekNumber);
-        int poolSize = matches.size();
         CountDownLatch latch = new CountDownLatch(poolSize);
-        ExecutorService executor = Executors.newFixedThreadPool(poolSize);
+
         for (Match match : matches){
             executor.submit(() -> {
                 match.run();
@@ -25,12 +24,19 @@ public class GameWeek {
             });
         }
 
-        executor.shutdown();
-
         try {
             latch.await();
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
+        }
+
+        return matches;
+    }
+
+    public List<Match> playSecuential(){
+        System.out.println("Jugando fecha "+this.gameWeekNumber);
+        for (Match match : matches){
+            match.play();
         }
 
         return matches;
