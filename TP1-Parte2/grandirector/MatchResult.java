@@ -1,3 +1,5 @@
+package grandirector;
+
 public class MatchResult
 {
     int goalsHome;

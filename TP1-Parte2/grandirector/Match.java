@@ -1,3 +1,7 @@
+package grandirector;
+
+import grandirector.constants.Constants;
+
 import java.util.Random;
 
 public class Match implements Runnable

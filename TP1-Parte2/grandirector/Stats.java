@@ -1,3 +1,5 @@
+package grandirector;
+
 public class Stats implements Comparable<Stats>
 {
     int points = 0;

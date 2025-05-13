@@ -1,3 +1,5 @@
+package grandirector;
+
 public class Team
 {
     private final String name;

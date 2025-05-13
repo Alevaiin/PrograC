@@ -1,3 +1,5 @@
+package grandirector;
+
 public enum ResultType
 {
     TIE,
